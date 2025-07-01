@@ -1,0 +1,43 @@
+# ===========================
+# .pre-commit-config.yaml
+# ===========================
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=5000']
+        # Prevent accidentally committing large binaries or logs (>5MB)
+
+      - id: check-merge-conflict
+        # Ensures no merge conflict markers remain in scripts
+
+      - id: end-of-file-fixer
+        # Ensures clean EOF newline
+
+      - id: trailing-whitespace
+        # Removes trailing whitespace in scripts and configs
+
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v1.4.0
+    hooks:
+      - id: go-fmt
+        # Skip if no Go tools/scripts used
+
+  - repo: local
+    hooks:
+      - id: powershell-lint
+        name: PowerShell Script Linter
+        entry: pwsh -Command "foreach ($file in $ARGS) { Invoke-ScriptAnalyzer -Path $file -Recurse -Severity Warning }"
+        language: system
+        types: [ps1]
+        description: Run PSScriptAnalyzer to check PowerShell syntax and best practices
+
+      - id: validate-xml
+        name: Validate XML Files
+        entry: xmllint --noout
+        language: system
+        types: [xml]
+        description: Ensure XML files are well-formed
+
